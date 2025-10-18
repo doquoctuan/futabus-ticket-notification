@@ -1,0 +1,875 @@
+[
+  {
+    "parentId": 11925,
+    "type": "1",
+    "name": "An Giang",
+    "tags": "An Giang",
+    "level": 2,
+    "code": "ANGIANG",
+    "id": 1
+  },
+  {
+    "parentId": 11927,
+    "type": "1",
+    "name": "Bà Rịa - Vũng Tàu",
+    "tags": "Ba Ria - Vung Tau",
+    "level": 2,
+    "code": "VUNGTAU",
+    "id": 2
+  },
+  {
+    "parentId": 11925,
+    "type": "1",
+    "name": "Bạc Liêu",
+    "tags": "Bac Lieu",
+    "level": 2,
+    "code": "BACLIEU",
+    "id": 3
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Bắc Kạn",
+    "tags": "Bac Kan",
+    "level": 2,
+    "code": "BACKAN",
+    "id": 4
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Bắc Giang",
+    "tags": "Bac Giang",
+    "level": 2,
+    "code": "BACGIANG",
+    "id": 5
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Bắc Ninh",
+    "tags": "Bac Ninh",
+    "level": 2,
+    "code": "BACNINH",
+    "id": 6
+  },
+  {
+    "parentId": 11925,
+    "type": "1",
+    "name": "Bến Tre",
+    "tags": "Ben Tre",
+    "level": 2,
+    "code": "BENTRE",
+    "id": 7
+  },
+  {
+    "parentId": 11927,
+    "type": "1",
+    "name": "Bình Dương",
+    "tags": "Binh Duong",
+    "level": 2,
+    "code": "BINHDUONG",
+    "id": 8
+  },
+  {
+    "parentId": 11924,
+    "type": "1",
+    "name": "Bình Định",
+    "tags": "Binh Dinh",
+    "level": 2,
+    "code": "BINHDINH",
+    "id": 9
+  },
+  {
+    "parentId": 11927,
+    "type": "1",
+    "name": "Bình Phước",
+    "tags": "Binh Phuoc",
+    "level": 2,
+    "code": "BINHPHUOC",
+    "id": 10
+  },
+  {
+    "parentId": 11924,
+    "type": "1",
+    "name": "Bình Thuận",
+    "tags": "Binh Thuan",
+    "level": 2,
+    "code": "BINHTHUAN",
+    "id": 11
+  },
+  {
+    "parentId": 11925,
+    "type": "1",
+    "name": "Cà Mau",
+    "tags": "Ca Mau",
+    "level": 2,
+    "code": "CAMAU",
+    "id": 12
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Cao Bằng",
+    "tags": "Cao Bang",
+    "level": 2,
+    "code": "CAOBANG",
+    "id": 13
+  },
+  {
+    "parentId": 11925,
+    "type": "1",
+    "name": "Cần Thơ",
+    "tags": "Can Tho",
+    "level": 2,
+    "code": "CANTHO",
+    "id": 14
+  },
+  {
+    "parentId": 11924,
+    "type": "1",
+    "name": "Đà Nẵng",
+    "tags": "Da Nang",
+    "level": 2,
+    "code": "DANANG",
+    "id": 15
+  },
+  {
+    "parentId": 11926,
+    "type": "1",
+    "name": "Đắk Lắk",
+    "tags": "Dak Lak",
+    "level": 2,
+    "code": "DAKLAK",
+    "id": 16
+  },
+  {
+    "parentId": 11926,
+    "type": "1",
+    "name": "Đắk Nông",
+    "tags": "Dak Nong",
+    "level": 2,
+    "code": "DAKNONG",
+    "id": 17
+  },
+  {
+    "parentId": 11927,
+    "type": "1",
+    "name": "Đồng Nai",
+    "tags": "Dong Nai",
+    "level": 2,
+    "code": "DONGNAI",
+    "id": 18
+  },
+  {
+    "parentId": 11925,
+    "type": "1",
+    "name": "Đồng Tháp",
+    "tags": "Dong Thap",
+    "level": 2,
+    "code": "DONGTHAP",
+    "id": 19
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Điện Biên",
+    "tags": "Dien Bien",
+    "level": 2,
+    "code": "DIENBIEN",
+    "id": 20
+  },
+  {
+    "parentId": 11926,
+    "type": "1",
+    "name": "Gia Lai",
+    "tags": "Gia Lai",
+    "level": 2,
+    "code": "GIALAI",
+    "id": 21
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Hà Giang",
+    "tags": "Ha Giang",
+    "level": 2,
+    "code": "HAGIANG",
+    "id": 22
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Hà Nam",
+    "tags": "Ha Nam",
+    "level": 2,
+    "code": "HANAM",
+    "id": 23
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Hà Nội",
+    "tags": "Ha Noi",
+    "level": 2,
+    "code": "HANOI",
+    "id": 24
+  },
+  {
+    "parentId": 11924,
+    "type": "1",
+    "name": "Hà Tĩnh",
+    "tags": "Ha Tinh",
+    "level": 2,
+    "code": "HATINH",
+    "id": 25
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Hải Dương",
+    "tags": "Hai Duong",
+    "level": 2,
+    "code": "HAIDUONG",
+    "id": 26
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Hải Phòng",
+    "tags": "Hai Phong",
+    "level": 2,
+    "code": "HAIPHONG",
+    "id": 27
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Hòa Bình",
+    "tags": "Hoa Binh",
+    "level": 2,
+    "code": "HOABINH",
+    "id": 28
+  },
+  {
+    "parentId": 11925,
+    "type": "1",
+    "name": "Hậu Giang",
+    "tags": "Hau Giang",
+    "level": 2,
+    "code": "HAUGIANG",
+    "id": 29
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Hưng Yên",
+    "tags": "Hung Yen",
+    "level": 2,
+    "code": "HUNGYEN",
+    "id": 30
+  },
+  {
+    "parentId": 11927,
+    "type": "1",
+    "name": "TP. Hồ Chí Minh",
+    "tags": "TP. Ho Chi Minh",
+    "level": 2,
+    "code": "TPHCM",
+    "id": 31
+  },
+  {
+    "parentId": 11924,
+    "type": "1",
+    "name": "Khánh Hòa",
+    "tags": "Khanh Hoa",
+    "level": 2,
+    "code": "KHANHHOA",
+    "id": 32
+  },
+  {
+    "parentId": 11925,
+    "type": "1",
+    "name": "Kiên Giang",
+    "tags": "Kien Giang",
+    "level": 2,
+    "code": "KIENGIANG",
+    "id": 33
+  },
+  {
+    "parentId": 11926,
+    "type": "1",
+    "name": "Kon Tum",
+    "tags": "Kon Tum",
+    "level": 2,
+    "code": "KONTUM",
+    "id": 34
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Lai Châu",
+    "tags": "Lai Chau",
+    "level": 2,
+    "code": "LAICHAU",
+    "id": 35
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Lào Cai",
+    "tags": "Lao Cai",
+    "level": 2,
+    "code": "LAOCAI",
+    "id": 36
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Lạng Sơn",
+    "tags": "Lang Son",
+    "level": 2,
+    "code": "LANGSON",
+    "id": 37
+  },
+  {
+    "parentId": 11926,
+    "type": "1",
+    "name": "Lâm Đồng",
+    "tags": "Lam Dong",
+    "level": 2,
+    "code": "LAMDONG",
+    "id": 38
+  },
+  {
+    "parentId": 11925,
+    "type": "1",
+    "name": "Long An",
+    "tags": "Long An",
+    "level": 2,
+    "code": "LONGAN",
+    "id": 39
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Nam Định",
+    "tags": "Nam Dinh",
+    "level": 2,
+    "code": "NAMDINH",
+    "id": 40
+  },
+  {
+    "parentId": 11924,
+    "type": "1",
+    "name": "Nghệ An",
+    "tags": "Nghe An",
+    "level": 2,
+    "code": "NGHEAN",
+    "id": 41
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Ninh Bình",
+    "tags": "Ninh Binh",
+    "level": 2,
+    "code": "NINHBINH",
+    "id": 42
+  },
+  {
+    "parentId": 11924,
+    "type": "1",
+    "name": "Ninh Thuận",
+    "tags": "Ninh Thuan",
+    "level": 2,
+    "code": "NINHTHUAN",
+    "id": 43
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Phú Thọ",
+    "tags": "Phu Tho",
+    "level": 2,
+    "code": "PHUTHO",
+    "id": 44
+  },
+  {
+    "parentId": 11924,
+    "type": "1",
+    "name": "Phú Yên",
+    "tags": "Phu Yen",
+    "level": 2,
+    "code": "PHUYEN",
+    "id": 45
+  },
+  {
+    "parentId": 11924,
+    "type": "1",
+    "name": "Quảng Bình",
+    "tags": "Quang Binh",
+    "level": 2,
+    "code": "QUANGBINH",
+    "id": 46
+  },
+  {
+    "parentId": 11924,
+    "type": "1",
+    "name": "Quảng Nam",
+    "tags": "Quang Nam",
+    "level": 2,
+    "code": "QUANGNAM",
+    "id": 47
+  },
+  {
+    "parentId": 11924,
+    "type": "1",
+    "name": "Quảng Ngãi",
+    "tags": "Quang Ngai",
+    "level": 2,
+    "code": "QUANGNGAI",
+    "id": 48
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Quảng Ninh",
+    "tags": "Quang Ninh",
+    "level": 2,
+    "code": "QUANGNINH",
+    "id": 49
+  },
+  {
+    "parentId": 11924,
+    "type": "1",
+    "name": "Quảng Trị",
+    "tags": "Quang Tri",
+    "level": 2,
+    "code": "QUANGTRI",
+    "id": 50
+  },
+  {
+    "parentId": 11925,
+    "type": "1",
+    "name": "Sóc Trăng",
+    "tags": "Soc Trang",
+    "level": 2,
+    "code": "SOCTRANG",
+    "id": 51
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Sơn La",
+    "tags": "Son La",
+    "level": 2,
+    "code": "SONLA",
+    "id": 52
+  },
+  {
+    "parentId": 11927,
+    "type": "1",
+    "name": "Tây Ninh",
+    "tags": "Tay Ninh",
+    "level": 2,
+    "code": "TAYNINH",
+    "id": 53
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Thái Bình",
+    "tags": "Thai Binh",
+    "level": 2,
+    "code": "THAIBINH",
+    "id": 54
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Thái Nguyên",
+    "tags": "Thai Nguyen",
+    "level": 2,
+    "code": "THAINGUYEN",
+    "id": 55
+  },
+  {
+    "parentId": 11924,
+    "type": "1",
+    "name": "Thanh Hóa",
+    "tags": "Thanh Hoa",
+    "level": 2,
+    "code": "THANHHOA",
+    "id": 56
+  },
+  {
+    "parentId": 11924,
+    "type": "1",
+    "name": "Thừa Thiên - Huế",
+    "tags": "Thua Thien - Hue",
+    "level": 2,
+    "code": "HUE",
+    "id": 57
+  },
+  {
+    "parentId": 11925,
+    "type": "1",
+    "name": "Tiền Giang",
+    "tags": "Tien Giang",
+    "level": 2,
+    "code": "TIENGIANG",
+    "id": 58
+  },
+  {
+    "parentId": 11925,
+    "type": "1",
+    "name": "Trà Vinh",
+    "tags": "Tra Vinh",
+    "level": 2,
+    "code": "TRAVINH",
+    "id": 59
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Tuyên Quang",
+    "tags": "Tuyen Quang",
+    "level": 2,
+    "code": "TUYENQUANG",
+    "id": 60
+  },
+  {
+    "parentId": 11925,
+    "type": "1",
+    "name": "Vĩnh Long",
+    "tags": "Vinh Long",
+    "level": 2,
+    "code": "VINHLONG",
+    "id": 61
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Vĩnh Phúc",
+    "tags": "Vinh Phuc",
+    "level": 2,
+    "code": "VINHPHUC",
+    "id": 62
+  },
+  {
+    "parentId": 11923,
+    "type": "1",
+    "name": "Yên Bái",
+    "tags": "Yen Bai",
+    "level": 2,
+    "code": "YENBAI",
+    "id": 63
+  },
+  {
+    "parentId": 1,
+    "type": "2",
+    "name": "Long Xuyên",
+    "tags": "Long Xuyen",
+    "level": 3,
+    "code": "LONGXUYEN",
+    "id": 64
+  },
+  {
+    "parentId": 1,
+    "type": "2",
+    "name": "Châu Đốc",
+    "tags": "Chau Doc",
+    "level": 3,
+    "code": "CHAUDOC",
+    "id": 65
+  },
+  {
+    "parentId": 1,
+    "type": "2",
+    "name": "Tịnh Biên",
+    "tags": "Tinh Bien",
+    "level": 3,
+    "code": "TINHBIEN",
+    "id": 73
+  },
+  {
+    "parentId": 1,
+    "type": "2",
+    "name": "Tri Tôn",
+    "tags": "Tri Ton",
+    "level": 3,
+    "code": "TRITON",
+    "id": 74
+  },
+  {
+    "parentId": 9,
+    "type": "2",
+    "name": "Quy Nhơn",
+    "tags": "Quy Nhon",
+    "level": 3,
+    "code": "QUINHON",
+    "id": 134
+  },
+  {
+    "parentId": 9,
+    "type": "2",
+    "name": "An Nhơn",
+    "tags": "An Nhon",
+    "level": 3,
+    "code": "ANNHON",
+    "id": 135
+  },
+  {
+    "parentId": 11,
+    "type": "2",
+    "name": "Phan Thiết",
+    "tags": "Phan Thiet",
+    "level": 3,
+    "code": "PHANTHIET",
+    "id": 156
+  },
+  {
+    "parentId": 12,
+    "type": "2",
+    "name": "Năm Căn",
+    "tags": "Nam Can",
+    "level": 3,
+    "code": "NAMCAN",
+    "id": 168
+  },
+  {
+    "parentId": 14,
+    "type": "2",
+    "name": "Thốt Nốt",
+    "tags": "Thot Not",
+    "level": 3,
+    "code": "THOTNOT",
+    "id": 192
+  },
+  {
+    "parentId": 16,
+    "type": "2",
+    "name": "Buôn Ma Thuột",
+    "tags": "Buon Ma Thuot",
+    "level": 3,
+    "code": "BUONMATHUOT",
+    "id": 205
+  },
+  {
+    "parentId": 17,
+    "type": "2",
+    "name": "Cư Jút",
+    "tags": "Cu Jut",
+    "level": 3,
+    "code": "CUJUT",
+    "id": 223
+  },
+  {
+    "parentId": 19,
+    "type": "2",
+    "name": "Cao Lãnh",
+    "tags": "Cao Lanh",
+    "level": 3,
+    "code": "CAOLANH",
+    "id": 238
+  },
+  {
+    "parentId": 19,
+    "type": "2",
+    "name": "Sa Đéc",
+    "tags": "Sa Dec",
+    "level": 3,
+    "code": "SADEC",
+    "id": 239
+  },
+  {
+    "parentId": 19,
+    "type": "2",
+    "name": "Hồng Ngự",
+    "tags": "Hong Ngu",
+    "level": 3,
+    "code": "HONGNGU",
+    "id": 240
+  },
+  {
+    "parentId": 29,
+    "type": "2",
+    "name": "Vị Thanh",
+    "tags": "Vi Thanh",
+    "level": 3,
+    "code": "VITHANH",
+    "id": 371
+  },
+  {
+    "parentId": 32,
+    "type": "2",
+    "name": "Nha Trang",
+    "tags": "Nha Trang",
+    "level": 3,
+    "code": "NHATRANG",
+    "id": 411
+  },
+  {
+    "parentId": 32,
+    "type": "2",
+    "name": "Cam Ranh",
+    "tags": "Cam Ranh",
+    "level": 3,
+    "code": "CAMRANH",
+    "id": 412
+  },
+  {
+    "parentId": 32,
+    "type": "2",
+    "name": "Ninh Hòa",
+    "tags": "Ninh Hoa",
+    "level": 3,
+    "code": "NINHHOA",
+    "id": 413
+  },
+  {
+    "parentId": 33,
+    "type": "2",
+    "name": "Rạch Giá",
+    "tags": "Rach Gia",
+    "level": 3,
+    "code": "RACHGIA",
+    "id": 420
+  },
+  {
+    "parentId": 33,
+    "type": "2",
+    "name": "Hà Tiên",
+    "tags": "Ha Tien",
+    "level": 3,
+    "code": "HATIEN",
+    "id": 421
+  },
+  {
+    "parentId": 33,
+    "type": "2",
+    "name": "Vĩnh Thuận",
+    "tags": "Vinh Thuan",
+    "level": 3,
+    "code": "VINHTHUAN",
+    "id": 432
+  },
+  {
+    "parentId": 38,
+    "type": "2",
+    "name": "Đà Lạt",
+    "tags": "Da Lat",
+    "level": 3,
+    "code": "DALAT",
+    "id": 474
+  },
+  {
+    "parentId": 38,
+    "type": "2",
+    "name": "Bảo Lộc",
+    "tags": "Bao Loc",
+    "level": 3,
+    "code": "BAOLOC",
+    "id": 475
+  },
+  {
+    "parentId": 38,
+    "type": "2",
+    "name": "Đơn Dương",
+    "tags": "Don Duong",
+    "level": 3,
+    "code": "DONDUONG",
+    "id": 477
+  },
+  {
+    "parentId": 43,
+    "type": "2",
+    "name": "Phan Rang-Tháp Chàm",
+    "tags": "Phan Rang-Thap Cham",
+    "level": 3,
+    "code": "PHANRANG",
+    "id": 539
+  },
+  {
+    "parentId": 45,
+    "type": "2",
+    "name": "Tuy Hoà",
+    "tags": "Tuy Hoa",
+    "level": 3,
+    "code": "TUYHOA",
+    "id": 559
+  },
+  {
+    "parentId": 47,
+    "type": "2",
+    "name": "Đại Lộc",
+    "tags": "Dai Loc",
+    "level": 3,
+    "code": "DAILOC",
+    "id": 581
+  },
+  {
+    "parentId": 51,
+    "type": "2",
+    "name": "Vĩnh Châu ",
+    "tags": "Vinh Chau ",
+    "level": 3,
+    "code": "VINHCHAU",
+    "id": 633
+  },
+  {
+    "parentId": 51,
+    "type": "2",
+    "name": "Ngã Năm",
+    "tags": "Nga Nam",
+    "level": 3,
+    "code": "NGANAM",
+    "id": 634
+  },
+  {
+    "parentId": 61,
+    "type": "2",
+    "name": "Bình Minh",
+    "tags": "Binh Minh",
+    "level": 3,
+    "code": "BINHMINH",
+    "id": 743
+  },
+  {
+    "parentId": 61,
+    "type": "2",
+    "name": "Trà Ôn",
+    "tags": "Tra On",
+    "level": 3,
+    "code": "TRAON",
+    "id": 748
+  },
+  {
+    "parentId": 84,
+    "type": "3",
+    "name": "Phường Hộ Phòng",
+    "tags": "Phuong Ho Phong",
+    "level": 4,
+    "code": "HOPHONG",
+    "id": 1353
+  },
+  {
+    "parentId": 156,
+    "type": "3",
+    "name": "Phường Mũi Né",
+    "tags": "Phuong Mui Ne",
+    "level": 4,
+    "code": "MUINE",
+    "id": 2008
+  },
+  {
+    "parentId": 638,
+    "type": "3",
+    "name": "Thị Trấn Đại Ngãi",
+    "tags": "Thi Tran Dai Ngai",
+    "level": 4,
+    "code": "DAINGAI",
+    "id": 11789
+  }
+]
