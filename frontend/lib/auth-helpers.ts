@@ -1,14 +1,12 @@
-import { auth0 } from './auth0';
+import { SessionData } from '@auth0/nextjs-auth0/types';
 
 /**
  * Get Auth0 access token from session
  * This token will be sent to backend for JWT verification
  */
-export async function getAccessToken(): Promise<string | null> {
+function getAccessToken(session: SessionData): string | null {
   try {
-    const session = await auth0.getSession();
-    
-    if (!session?.accessToken) {
+    if (!session?.tokenSet?.accessToken) {
       console.error('No access token in session');
       return null;
     }
@@ -21,10 +19,10 @@ export async function getAccessToken(): Promise<string | null> {
 }
 
 /**
- * Create headers with Authorization Bearer token
+ * Create headers with Authorization Bearer token if it exists
  */
-export async function createAuthHeaders(): Promise<Record<string, string>> {
-  const token = await getAccessToken();
+export function createHeaders(session: SessionData): Record<string, string> {
+  const token = getAccessToken(session);
   
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',

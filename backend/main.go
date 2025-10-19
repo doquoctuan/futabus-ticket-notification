@@ -101,7 +101,7 @@ func Auth0JWTMiddleware() gin.HandlerFunc {
 
 		if err != nil {
 			log.Printf("Token validation error: %v", err)
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token", "details": err.Error()})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 			c.Abort()
 			return
 		}

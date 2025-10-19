@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth0 } from '@/lib/auth0';
+import { createHeaders } from '@/lib/auth-helpers';
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8080';
 
@@ -7,25 +8,16 @@ export async function GET() {
   try {
     const session = await auth0.getSession();
 
-    console.log('Session:', session);
-    
     if (!session?.user?.sub) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get access token from session
-    const accessToken = session.tokenSet.accessToken as string;
-    if (!accessToken) {
-      return NextResponse.json({ error: 'No access token available' }, { status: 401 });
-    }
+    const headers = createHeaders(session);
 
     const response = await fetch(
       `${BACKEND_URL}/api/subscriptions/${session.user.sub}`,
       {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-        },
+        headers: headers,
       }
     );
 
@@ -48,20 +40,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get access token from session
-    const accessToken = session.tokenSet.accessToken as string;
-    if (!accessToken) {
-      return NextResponse.json({ error: 'No access token available' }, { status: 401 });
-    }
+    const headers = createHeaders(session);
 
     const body = await request.json();
     
     const response = await fetch(`${BACKEND_URL}/api/subscriptions`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-      },
+      headers: headers,
       body: JSON.stringify({
         ...body,
         user_id: session.user.sub,

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth0 } from '@/lib/auth0';
+import { createHeaders } from '@/lib/auth-helpers';
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8080';
 
@@ -14,23 +15,16 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get access token from session
-    const accessToken = session.tokenSet.accessToken as string;
-    if (!accessToken) {
-      return NextResponse.json({ error: 'No access token available' }, { status: 401 });
-    }
-
     const { id } = await params;
     const body = await request.json();
     
+    const headers = createHeaders(session);
+
     const response = await fetch(
       `${BACKEND_URL}/api/subscriptions/${id}`,
       {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-        },
+        headers: headers,
         body: JSON.stringify(body),
       }
     );
@@ -57,11 +51,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get access token from session
-    const accessToken = session.tokenSet.accessToken as string;
-    if (!accessToken) {
-      return NextResponse.json({ error: 'No access token available' }, { status: 401 });
-    }
+    const headers = createHeaders(session);
 
     const { id } = await params;
     
@@ -69,9 +59,7 @@ export async function DELETE(
       `${BACKEND_URL}/api/subscriptions/${id}`,
       {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-        },
+        headers: headers,
       }
     );
 
