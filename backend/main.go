@@ -26,6 +26,7 @@ type Subscription struct {
 	IsActive        bool      `gorm:"default:true" json:"is_active"`
 	CreatedAt       int64     `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt       int64     `gorm:"autoUpdateTime" json:"updated_at"`
+	LastCheckedAt   time.Time `gorm:"type:timestamptz;column:last_checked_at" json:"last_checked_at"`
 }
 
 // TableName returns the table name for the Subscription model
@@ -46,10 +47,12 @@ func (s *Subscription) BeforeCreate(tx *gorm.DB) error {
 }
 
 func initDB() {
-	dsn := os.Getenv("DATABASE_URL")
-	if dsn == "" {
-		dsn = "host=localhost user=postgres password=ctadmin dbname=futabus port=5432 sslmode=disable"
-	}
+	host := os.Getenv("DATABASE_HOST")
+	username := os.Getenv("DATABASE_USERNAME")
+	password := os.Getenv("DATABASE_PASSWORD")
+	name := os.Getenv("DATABASE_NAME")
+	port := os.Getenv("DATABASE_PORT")
+	dsn := "host=" + host + " user=" + username + " password=" + password + " dbname=" + name + " port=" + port
 
 	var err error
 	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
