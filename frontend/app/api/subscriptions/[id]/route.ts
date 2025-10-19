@@ -14,6 +14,12 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Get access token from session
+    const accessToken = session.tokenSet.accessToken as string;
+    if (!accessToken) {
+      return NextResponse.json({ error: 'No access token available' }, { status: 401 });
+    }
+
     const { id } = await params;
     const body = await request.json();
     
@@ -23,6 +29,7 @@ export async function PUT(
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
         },
         body: JSON.stringify(body),
       }
@@ -31,6 +38,7 @@ export async function PUT(
     const data = await response.json();
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
+    console.error('PUT /api/subscriptions/[id] error:', error);
     return NextResponse.json(
       { error: 'Failed to update subscription' },
       { status: 500 }
@@ -49,18 +57,28 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Get access token from session
+    const accessToken = session.tokenSet.accessToken as string;
+    if (!accessToken) {
+      return NextResponse.json({ error: 'No access token available' }, { status: 401 });
+    }
+
     const { id } = await params;
     
     const response = await fetch(
       `${BACKEND_URL}/api/subscriptions/${id}`,
       {
         method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
       }
     );
 
     const data = await response.json();
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
+    console.error('DELETE /api/subscriptions/[id] error:', error);
     return NextResponse.json(
       { error: 'Failed to delete subscription' },
       { status: 500 }
