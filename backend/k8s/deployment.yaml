@@ -1,0 +1,124 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: futabus-backend
+  namespace: futabus
+  labels:
+    app: futabus-backend
+    version: v1
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: futabus-backend
+  template:
+    metadata:
+      labels:
+        app: futabus-backend
+        version: v1
+    spec:
+      # Security context for pod
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      
+      # Image pull secret for private registry
+      imagePullSecrets:
+      - name: doquoctuan-gitlab
+      
+      containers:
+      - name: backend
+        image: registry.gitlab.com/futabus/backend:dev
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        
+        # Environment variables from ConfigMap
+        envFrom:
+        - configMapRef:
+            name: futabus-backend-config
+        
+        # Environment variables from Secret
+        env:
+        - name: AUTH0_DOMAIN
+          valueFrom:
+            secretKeyRef:
+              name: futabus-backend-secret
+              key: AUTH0_DOMAIN
+        - name: AUTH0_AUDIENCE
+          valueFrom:
+            secretKeyRef:
+              name: futabus-backend-secret
+              key: AUTH0_AUDIENCE
+        - name: DATABASE_HOST
+          valueFrom:
+            secretKeyRef:
+              name: futabus-backend-secret
+              key: DATABASE_HOST
+        - name: DATABASE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: futabus-backend-secret
+              key: DATABASE_USERNAME
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: futabus-backend-secret
+              key: DATABASE_PASSWORD
+        
+        # Resource limits and requests
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        
+        # Liveness probe
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          timeoutSeconds: 3
+          failureThreshold: 3
+        
+        # Readiness probe
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+        
+        # Startup probe (for slow starting apps)
+        startupProbe:
+          httpGet:
+            path: /api/health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 30
+        
+        # Security context for container
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL

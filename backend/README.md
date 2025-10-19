@@ -87,6 +87,18 @@ go run main.go
 | `DELETE` | `/api/subscriptions/:id` | Delete subscription |
 | `GET` | `/api/health` | Health check endpoint |
 
+### Option 4: Use Docker
+
+1. **Build the Docker image:**
+   ```bash
+   docker build --platform linux/arm64 -t registry.gitlab.com/futabus/backend:dev .
+   ```
+
+2. **Run the Docker container:**
+   ```bash
+   docker run -p 8080:8080 --env-file .env registry.gitlab.com/futabus/backend:dev
+   ```
+
 ### API Request Examples
 
 **Create Subscription:**

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: futabus-backend-service
+  namespace: futabus
+  labels:
+    app: futabus-backend
+spec:
+  type: ClusterIP
+  selector:
+    app: futabus-backend
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 8080
+  sessionAffinity: None

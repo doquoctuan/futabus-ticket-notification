@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: futabus-backend-config
+  namespace: futabus
+  labels:
+    app: futabus-backend
+data:
+  # Non-sensitive configuration
+  PORT: "8080"
+  DATABASE_PORT: "26257"
+  DATABASE_NAME: "defaultdb"
+  
+  # CORS settings (can be comma-separated)
+  ALLOWED_ORIGINS: "https://futabus.ourshortlink.click,https://www.futabus.ourshortlink.click"
