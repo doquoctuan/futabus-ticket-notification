@@ -1,5 +1,5 @@
 import { SessionData } from '@auth0/nextjs-auth0/types';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { auth0 } from './auth0';
 
 /**
@@ -81,3 +81,45 @@ export async function authenticatedFetch(
   });
 }
 
+
+/**
+ * Type for route handler with session
+ */
+type AuthenticatedHandler<T = any> = (
+  session: SessionData,
+  request: NextRequest,
+  context?: T
+) => Promise<NextResponse>;
+
+/**
+ * Higher-order function that wraps API route handlers with authentication
+ * Automatically validates session and passes it to the handler
+ * 
+ * @example
+ * export const GET = withAuth(async (session, request) => {
+ *   // session is guaranteed to be valid here
+ *   const headers = createHeaders(session);
+ *   // ... your logic
+ * });
+ */
+export function withAuth<T = any>(
+  handler: AuthenticatedHandler<T>
+) {
+  return async (request: NextRequest, context?: T) => {
+    try {
+      const result = await validateSession();
+      
+      if ('error' in result) {
+        return result.error;
+      }
+
+      return await handler(result.session, request, context);
+    } catch (error) {
+      console.error('Authentication middleware error:', error);
+      return NextResponse.json(
+        { error: 'Internal server error' },
+        { status: 500 }
+      );
+    }
+  };
+}

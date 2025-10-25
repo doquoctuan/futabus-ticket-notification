@@ -1,17 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticatedFetch, validateSession } from '@/lib/auth-helpers';
+import { authenticatedFetch, withAuth } from '@/lib/auth-helpers';
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8080';
 
-export async function GET() {
+export const GET = withAuth(async (session) => {
   try {
-    const result = await validateSession();
-    
-    if ('error' in result) {
-      return result.error;
-    }
-
-    const { session } = result;
 
     const response = await authenticatedFetch(
       `${BACKEND_URL}/api/subscriptions/${session.user.sub}`
@@ -31,17 +24,10 @@ export async function GET() {
       { status: 500 }
     );
   }
-}
+});
 
-export async function POST(request: NextRequest) {
+export const POST = withAuth(async (session, request: NextRequest) => {
   try {
-    const result = await validateSession();
-    
-    if ('error' in result) {
-      return result.error;
-    }
-
-    const { session } = result;
     const body = await request.json();
     
     const response = await authenticatedFetch(
@@ -70,4 +56,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+});
