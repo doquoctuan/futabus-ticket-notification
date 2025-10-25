@@ -4,12 +4,29 @@ import { useState, useEffect } from 'react';
 import { useUser } from '@auth0/nextjs-auth0';
 import locationData from '@/data/location_info.json';
 
+interface Trip {
+    id: string;
+    subscription_id: string;
+    route_code: string;
+    route_name: string;
+    departure_time: string;
+    arrival_time: string;
+    departure_station: string;
+    arrival_station: string;
+    travel_time: string;
+    available_seats: number;
+    price: number;
+    created_at: number;
+    updated_at: number;
+}
+
 interface Subscription {
-    id: number;
+    id: string;
     origin_code: string;
     destination_code: string;
     date_time: string;
     is_active: boolean;
+    trips?: Trip[];
 }
 
 interface Location {
@@ -161,7 +178,7 @@ export default function Dashboard() {
         }
     };
 
-    const handleDelete = async (id: number) => {
+    const handleDelete = async (id: string) => {
         if (!confirm('Bạn có chắc muốn xóa thông báo này?')) return;
 
         try {
@@ -172,7 +189,7 @@ export default function Dashboard() {
         }
     };
 
-    const handleToggleActive = async (id: number, isActive: boolean) => {
+    const handleToggleActive = async (id: string, isActive: boolean) => {
         try {
             await fetch(`/api/subscriptions/${id}`, {
                 method: 'PUT',
@@ -331,7 +348,7 @@ export default function Dashboard() {
                                 key={sub.id}
                                 className="bg-white p-6 rounded-lg shadow hover:shadow-md transition"
                             >
-                                <div className="flex justify-between items-start">
+                                <div className="flex justify-between items-start mb-4">
                                     <div className="flex-1">
                                         <div className="flex items-center gap-4 mb-2">
                                             <span className="text-lg font-semibold text-gray-800">
@@ -371,6 +388,86 @@ export default function Dashboard() {
                                         </button>
                                     </div>
                                 </div>
+
+                                {/* Trip Details Section */}
+                                {sub.trips && sub.trips.length > 0 ? (
+                                    <div className="mt-4 border-t pt-4">
+                                        <h4 className="font-semibold text-gray-700 mb-3">
+                                            Chuyến xe tìm thấy ({sub.trips.length})
+                                        </h4>
+                                        <div className="space-y-3">
+                                            {sub.trips.map((trip) => (
+                                                <div
+                                                    key={trip.id}
+                                                    className="bg-gray-50 p-4 rounded-lg border border-gray-200"
+                                                >
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                        <div>
+                                                            <p className="text-sm text-gray-600">
+                                                                <span className="font-medium">Tuyến đường:</span>{' '}
+                                                                {trip.route_name} ({trip.route_code})
+                                                            </p>
+                                                            <p className="text-sm text-gray-600">
+                                                                <span className="font-medium">Điểm đi:</span>{' '}
+                                                                {trip.departure_station}
+                                                            </p>
+                                                            <p className="text-sm text-gray-600">
+                                                                <span className="font-medium">Điểm đến:</span>{' '}
+                                                                {trip.arrival_station}
+                                                            </p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-sm text-gray-600">
+                                                                <span className="font-medium">Giờ đi:</span>{' '}
+                                                                {new Date(trip.departure_time).toLocaleString('vi-VN', {
+                                                                    hour: '2-digit',
+                                                                    minute: '2-digit',
+                                                                    day: '2-digit',
+                                                                    month: '2-digit',
+                                                                })}
+                                                            </p>
+                                                            <p className="text-sm text-gray-600">
+                                                                <span className="font-medium">Giờ đến:</span>{' '}
+                                                                {new Date(trip.arrival_time).toLocaleString('vi-VN', {
+                                                                    hour: '2-digit',
+                                                                    minute: '2-digit',
+                                                                    day: '2-digit',
+                                                                    month: '2-digit',
+                                                                })}
+                                                            </p>
+                                                            <p className="text-sm text-gray-600">
+                                                                <span className="font-medium">Thời gian:</span>{' '}
+                                                                {trip.travel_time}
+                                                            </p>
+                                                        </div>
+                                                        <div className="md:col-span-2 flex justify-between items-center">
+                                                            <div className="flex gap-4">
+                                                                <p className="text-sm text-gray-600">
+                                                                    <span className="font-medium">Ghế trống:</span>{' '}
+                                                                    <span className="text-green-600 font-semibold">
+                                                                        {trip.available_seats}
+                                                                    </span>
+                                                                </p>
+                                                                <p className="text-sm text-gray-600">
+                                                                    <span className="font-medium">Giá vé:</span>{' '}
+                                                                    <span className="text-blue-600 font-semibold">
+                                                                        {trip.price.toLocaleString('vi-VN')} đ
+                                                                    </span>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="mt-4 border-t pt-4">
+                                        <p className="text-sm text-gray-500 italic">
+                                            Chưa tìm thấy chuyến xe phù hợp
+                                        </p>
+                                    </div>
+                                )}
                             </div>
                         ))
                     )}

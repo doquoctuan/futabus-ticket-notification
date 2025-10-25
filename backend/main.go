@@ -55,6 +55,40 @@ func (s *Subscription) BeforeCreate(tx *gorm.DB) error {
 	return nil
 }
 
+// Trip represents a found bus trip for a subscription
+type Trip struct {
+	ID              uuid.UUID `gorm:"type:uuid;primaryKey" json:"id"`
+	SubscriptionID  uuid.UUID `gorm:"type:uuid;index;not null" json:"subscription_id"`
+	RouteCode       string    `gorm:"not null" json:"route_code"`
+	RouteName       string    `gorm:"not null" json:"route_name"`
+	DepartureTime   time.Time `gorm:"type:timestamptz;not null" json:"departure_time"`
+	ArrivalTime     time.Time `gorm:"type:timestamptz;not null" json:"arrival_time"`
+	DepartureStation string   `gorm:"not null" json:"departure_station"`
+	ArrivalStation  string    `gorm:"not null" json:"arrival_station"`
+	TravelTime      string    `gorm:"not null" json:"travel_time"` // e.g., "5h 30m"
+	AvailableSeats  int32     `gorm:"not null" json:"available_seats"`
+	Price           float64   `gorm:"not null" json:"price"`
+	CreatedAt       int64     `gorm:"autoCreateTime" json:"created_at"`
+	UpdatedAt       int64     `gorm:"autoUpdateTime" json:"updated_at"`
+}
+
+// TableName returns the table name for the Trip model
+func (Trip) TableName() string {
+	return "trips"
+}
+
+// BeforeCreate hook to generate UUID v7
+func (t *Trip) BeforeCreate(tx *gorm.DB) error {
+	if t.ID == (uuid.UUID{}) {
+		newUUID, err := uuid.NewV7()
+		if err != nil {
+			return err
+		}
+		t.ID = newUUID
+	}
+	return nil
+}
+
 // Custom JWT Claims
 type CustomClaims struct {
 	jwt.RegisteredClaims
@@ -185,7 +219,7 @@ func initDB() {
 	}
 
 	// Auto migrate
-	db.AutoMigrate(&Subscription{})
+	db.AutoMigrate(&Subscription{}, &Trip{})
 
 	// Add unique constraint for preventing duplicate active subscriptions
 	db.Exec(`CREATE UNIQUE INDEX IF NOT EXISTS unique_active_subscription 
@@ -235,6 +269,12 @@ func main() {
 		api.GET("/subscriptions/:userId", getUserSubscriptions)
 		api.PUT("/subscriptions/:id", updateSubscription)
 		api.DELETE("/subscriptions/:id", deleteSubscription)
+		
+		// Trip routes
+		api.POST("/trips", createTrip)
+		api.GET("/trips/subscription/:subscriptionId", getTripsBySubscription)
+		api.DELETE("/trips/:id", deleteTrip)
+		
 		api.GET("/health", healthCheck)
 	}
 
@@ -285,7 +325,24 @@ func getUserSubscriptions(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, subscriptions)
+	// Build response with trips for each subscription
+	type SubscriptionWithTrips struct {
+		Subscription
+		Trips []Trip `json:"trips"`
+	}
+
+	var result []SubscriptionWithTrips
+	for _, sub := range subscriptions {
+		var trips []Trip
+		db.Where("subscription_id = ?", sub.ID).Order("departure_time ASC").Find(&trips)
+		
+		result = append(result, SubscriptionWithTrips{
+			Subscription: sub,
+			Trips:        trips,
+		})
+	}
+
+	c.JSON(200, result)
 }
 
 func updateSubscription(c *gin.Context) {
@@ -358,4 +415,49 @@ func deleteSubscription(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{"message": "Subscription deleted successfully"})
+}
+
+func createTrip(c *gin.Context) {
+	var trip Trip
+	if err := c.ShouldBindJSON(&trip); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Verify the subscription exists
+	var subscription Subscription
+	if err := db.First(&subscription, "id = ?", trip.SubscriptionID).Error; err != nil {
+		c.JSON(404, gin.H{"error": "Subscription not found"})
+		return
+	}
+
+	if err := db.Create(&trip).Error; err != nil {
+		c.JSON(500, gin.H{"error": "Failed to create trip"})
+		return
+	}
+
+	c.JSON(201, trip)
+}
+
+func getTripsBySubscription(c *gin.Context) {
+	subscriptionId := c.Param("subscriptionId")
+
+	var trips []Trip
+	if err := db.Where("subscription_id = ?", subscriptionId).Order("departure_time ASC").Find(&trips).Error; err != nil {
+		c.JSON(500, gin.H{"error": "Failed to fetch trips"})
+		return
+	}
+
+	c.JSON(200, trips)
+}
+
+func deleteTrip(c *gin.Context) {
+	id := c.Param("id")
+
+	if err := db.Delete(&Trip{}, "id = ?", id).Error; err != nil {
+		c.JSON(500, gin.H{"error": "Failed to delete trip"})
+		return
+	}
+
+	c.JSON(200, gin.H{"message": "Trip deleted successfully"})
 }
