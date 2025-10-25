@@ -10,10 +10,10 @@ export const PUT = withAuth(async (
 ) => {
   try {
     const body = await request.json();
-
     const { id } = await context!.params;
 
     const response = await authenticatedFetch(
+      session,
       `${BACKEND_URL}/api/subscriptions/${id}`,
       {
         method: 'PUT',
@@ -25,11 +25,6 @@ export const PUT = withAuth(async (
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
     console.error('PUT /api/subscriptions/[id] error:', error);
-    
-    if (error instanceof Error && error.message === 'Unauthorized') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    
     return NextResponse.json(
       { error: 'Failed to update subscription' },
       { status: 500 }
@@ -46,6 +41,7 @@ export const DELETE = withAuth(async (
     const { id } = await context!.params;
     
     const response = await authenticatedFetch(
+      session,
       `${BACKEND_URL}/api/subscriptions/${id}`,
       {
         method: 'DELETE',
@@ -56,11 +52,6 @@ export const DELETE = withAuth(async (
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
     console.error('DELETE /api/subscriptions/[id] error:', error);
-    
-    if (error instanceof Error && error.message === 'Unauthorized') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    
     return NextResponse.json(
       { error: 'Failed to delete subscription' },
       { status: 500 }

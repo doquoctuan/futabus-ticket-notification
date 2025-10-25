@@ -5,8 +5,8 @@ const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8080';
 
 export const GET = withAuth(async (session) => {
   try {
-
     const response = await authenticatedFetch(
+      session,
       `${BACKEND_URL}/api/subscriptions/${session.user.sub}`
     );
 
@@ -14,11 +14,6 @@ export const GET = withAuth(async (session) => {
     return NextResponse.json(data);
   } catch (error) {
     console.error('GET /api/subscriptions error:', error);
-    
-    if (error instanceof Error && error.message === 'Unauthorized') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    
     return NextResponse.json(
       { error: 'Failed to fetch subscriptions' },
       { status: 500 }
@@ -31,6 +26,7 @@ export const POST = withAuth(async (session, request: NextRequest) => {
     const body = await request.json();
     
     const response = await authenticatedFetch(
+      session,
       `${BACKEND_URL}/api/subscriptions`,
       {
         method: 'POST',
@@ -46,11 +42,6 @@ export const POST = withAuth(async (session, request: NextRequest) => {
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
     console.error('POST /api/subscriptions error:', error);
-    
-    if (error instanceof Error && error.message === 'Unauthorized') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    
     return NextResponse.json(
       { error: 'Failed to create subscription' },
       { status: 500 }

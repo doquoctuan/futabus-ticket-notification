@@ -60,16 +60,10 @@ export async function validateSession(): Promise<
  * Automatically includes authentication headers from session
  */
 export async function authenticatedFetch(
+  session: SessionData,
   url: string,
   options: RequestInit = {}
 ): Promise<Response> {
-  const result = await validateSession();
-  
-  if ('error' in result) {
-    throw new Error('Unauthorized');
-  }
-
-  const { session } = result;
   const headers = createHeaders(session);
 
   return fetch(url, {
