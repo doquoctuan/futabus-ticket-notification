@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth0 } from '@/lib/auth0';
-import { createHeaders } from '@/lib/auth-helpers';
+import { createHeaders, validateSession } from '@/lib/auth-helpers';
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8080';
 
 export async function GET() {
   try {
-    const session = await auth0.getSession();
-
-    if (!session?.user?.sub) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const result = await validateSession();
+    
+    if ('error' in result) {
+      return result.error;
     }
 
+    const { session } = result;
     const headers = createHeaders(session);
 
     const response = await fetch(
@@ -34,12 +34,13 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth0.getSession();
+    const result = await validateSession();
     
-    if (!session?.user?.sub) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if ('error' in result) {
+      return result.error;
     }
 
+    const { session } = result;
     const headers = createHeaders(session);
 
     const body = await request.json();
