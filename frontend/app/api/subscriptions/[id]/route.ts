@@ -1,15 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticatedFetch, validateSession } from '@/lib/auth-helpers';
+import { authenticatedFetch, withAuth } from '@/lib/auth-helpers';
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8080';
 
-export async function PUT(
+export const PUT = withAuth(async (
+  session,
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  context?: { params: Promise<{ id: string }> }
+) => {
   try {
-    const { id } = await params;
     const body = await request.json();
+
+    const { id } = await context!.params;
 
     const response = await authenticatedFetch(
       `${BACKEND_URL}/api/subscriptions/${id}`,
@@ -33,14 +35,15 @@ export async function PUT(
       { status: 500 }
     );
   }
-}
+});
 
-export async function DELETE(
+export const DELETE = withAuth(async (
+  session,
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  context?: { params: Promise<{ id: string }> }
+) => {
   try {
-    const { id } = await params;
+    const { id } = await context!.params;
     
     const response = await authenticatedFetch(
       `${BACKEND_URL}/api/subscriptions/${id}`,
@@ -63,4 +66,4 @@ export async function DELETE(
       { status: 500 }
     );
   }
-}
+});
