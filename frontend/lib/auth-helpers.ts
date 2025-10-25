@@ -1,4 +1,6 @@
 import { SessionData } from '@auth0/nextjs-auth0/types';
+import { NextResponse } from 'next/server';
+import { auth0 } from './auth0';
 
 /**
  * Get Auth0 access token from session
@@ -34,3 +36,48 @@ export function createHeaders(session: SessionData): Record<string, string> {
 
   return headers;
 }
+
+/**
+ * Middleware function to validate Auth0 session
+ * Returns the session if valid, or an unauthorized response
+ */
+export async function validateSession(): Promise<
+  { session: SessionData } | { error: NextResponse }
+> {
+  const session = await auth0.getSession();
+  
+  if (!session?.user?.sub) {
+    return {
+      error: NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    };
+  }
+
+  return { session };
+}
+
+/**
+ * Authenticated fetch to backend API
+ * Automatically includes authentication headers from session
+ */
+export async function authenticatedFetch(
+  url: string,
+  options: RequestInit = {}
+): Promise<Response> {
+  const result = await validateSession();
+  
+  if ('error' in result) {
+    throw new Error('Unauthorized');
+  }
+
+  const { session } = result;
+  const headers = createHeaders(session);
+
+  return fetch(url, {
+    ...options,
+    headers: {
+      ...headers,
+      ...options.headers,
+    },
+  });
+}
+
