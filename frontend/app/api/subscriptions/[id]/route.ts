@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createHeaders, validateSession } from '@/lib/auth-helpers';
+import { authenticatedFetch, validateSession } from '@/lib/auth-helpers';
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8080';
 
@@ -8,23 +8,13 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const result = await validateSession();
-    
-    if ('error' in result) {
-      return result.error;
-    }
-
-    const { session } = result;
     const { id } = await params;
     const body = await request.json();
-    
-    const headers = createHeaders(session);
 
-    const response = await fetch(
+    const response = await authenticatedFetch(
       `${BACKEND_URL}/api/subscriptions/${id}`,
       {
         method: 'PUT',
-        headers: headers,
         body: JSON.stringify(body),
       }
     );
@@ -33,6 +23,11 @@ export async function PUT(
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
     console.error('PUT /api/subscriptions/[id] error:', error);
+    
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    
     return NextResponse.json(
       { error: 'Failed to update subscription' },
       { status: 500 }
@@ -45,22 +40,12 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const result = await validateSession();
-    
-    if ('error' in result) {
-      return result.error;
-    }
-
-    const { session } = result;
-    const headers = createHeaders(session);
-
     const { id } = await params;
     
-    const response = await fetch(
+    const response = await authenticatedFetch(
       `${BACKEND_URL}/api/subscriptions/${id}`,
       {
         method: 'DELETE',
-        headers: headers,
       }
     );
 
@@ -68,6 +53,11 @@ export async function DELETE(
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
     console.error('DELETE /api/subscriptions/[id] error:', error);
+    
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    
     return NextResponse.json(
       { error: 'Failed to delete subscription' },
       { status: 500 }

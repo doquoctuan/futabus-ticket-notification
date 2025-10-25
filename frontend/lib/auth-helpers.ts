@@ -54,3 +54,30 @@ export async function validateSession(): Promise<
 
   return { session };
 }
+
+/**
+ * Authenticated fetch to backend API
+ * Automatically includes authentication headers from session
+ */
+export async function authenticatedFetch(
+  url: string,
+  options: RequestInit = {}
+): Promise<Response> {
+  const result = await validateSession();
+  
+  if ('error' in result) {
+    throw new Error('Unauthorized');
+  }
+
+  const { session } = result;
+  const headers = createHeaders(session);
+
+  return fetch(url, {
+    ...options,
+    headers: {
+      ...headers,
+      ...options.headers,
+    },
+  });
+}
+
