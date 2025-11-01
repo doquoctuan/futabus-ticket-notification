@@ -61,6 +61,69 @@ type CustomClaims struct {
 	Scope string `json:"scope"`
 }
 
+// extractBearerToken extracts the token string from the Authorization header
+func extractBearerToken(authHeader string) (string, error) {
+	if authHeader == "" {
+		return "", fmt.Errorf("missing authorization header")
+	}
+
+	parts := strings.Split(authHeader, " ")
+	if len(parts) != 2 || parts[0] != "Bearer" {
+		return "", fmt.Errorf("invalid authorization format")
+	}
+
+	return parts[1], nil
+}
+
+// parseAndValidateToken parses the JWT token and validates its signature
+func parseAndValidateToken(tokenString string) (*jwt.Token, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+		if token.Method.Alg() != "RS256" {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return jwks.Keyfunc(token)
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("token parsing failed: %w", err)
+	}
+
+	if !token.Valid {
+		return nil, fmt.Errorf("token is not valid")
+	}
+
+	return token, nil
+}
+
+// extractAndValidateClaims extracts claims from token and validates them
+func extractAndValidateClaims(token *jwt.Token) (*CustomClaims, error) {
+	claims, ok := token.Claims.(*CustomClaims)
+	if !ok {
+		return nil, fmt.Errorf("invalid token claims")
+	}
+
+	return claims, nil
+}
+
+// verifyIssuer checks if the token issuer matches the expected Auth0 domain
+func verifyIssuer(claims *CustomClaims) error {
+	expectedIssuer := "https://" + auth0Domain + "/"
+	if claims.Issuer != expectedIssuer {
+		return fmt.Errorf("invalid issuer: expected %s, got %s", expectedIssuer, claims.Issuer)
+	}
+	return nil
+}
+
+// verifyAudience checks if the token audience contains the expected audience
+func verifyAudience(claims *CustomClaims) error {
+	for _, aud := range claims.Audience {
+		if aud == auth0Audience {
+			return nil
+		}
+	}
+	return fmt.Errorf("invalid audience")
+}
+
 // Auth0JWTMiddleware validates JWT tokens from Auth0
 func Auth0JWTMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -71,34 +134,15 @@ func Auth0JWTMiddleware() gin.HandlerFunc {
 		}
 
 		// Extract token from Authorization header
-		authHeader := c.GetHeader("Authorization")
-		if authHeader == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Missing authorization header"})
+		tokenString, err := extractBearerToken(c.GetHeader("Authorization"))
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 			c.Abort()
 			return
 		}
-
-		// Expected format: "Bearer <token>"
-		parts := strings.Split(authHeader, " ")
-		if len(parts) != 2 || parts[0] != "Bearer" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid authorization format. Expected: Bearer <token>"})
-			c.Abort()
-			return
-		}
-
-		tokenString := parts[1]
 
 		// Parse and validate the token
-		token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
-			// Verify signing algorithm
-			if token.Method.Alg() != "RS256" {
-				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-			}
-
-			// Get the key from JWKS
-			return jwks.Keyfunc(token)
-		})
-
+		token, err := parseAndValidateToken(tokenString)
 		if err != nil {
 			log.Printf("Token validation error: %v", err)
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
@@ -106,49 +150,31 @@ func Auth0JWTMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		if !token.Valid {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token is not valid"})
-			c.Abort()
-			return
-		}
-
 		// Extract claims
-		claims, ok := token.Claims.(*CustomClaims)
-		if !ok {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token claims"})
+		claims, err := extractAndValidateClaims(token)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 			c.Abort()
 			return
 		}
 
 		// Verify issuer
-		expectedIssuer := "https://" + auth0Domain + "/"
-		if claims.Issuer != expectedIssuer {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"error":    "Invalid issuer",
-				"expected": expectedIssuer,
-				"got":      claims.Issuer,
-			})
+		if err := verifyIssuer(claims); err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 			c.Abort()
 			return
 		}
 
 		// Verify audience
-		audienceValid := false
-		for _, aud := range claims.Audience {
-			if aud == auth0Audience {
-				audienceValid = true
-				break
-			}
-		}
-		if !audienceValid {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid audience"})
+		if err := verifyAudience(claims); err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 			c.Abort()
 			return
 		}
 
 		// Store user info in context for use in handlers
 		c.Set("user_id", claims.Subject)
-		c.Set("user_email", claims.Subject) // You can extract email from token if available
+		c.Set("user_email", claims.Subject)
 
 		c.Next()
 	}
@@ -288,6 +314,51 @@ func getUserSubscriptions(c *gin.Context) {
 	c.JSON(200, subscriptions)
 }
 
+// extractUpdatedValues extracts the updated values from the updates map, using existing values as defaults
+func extractUpdatedValues(subscription *Subscription, updates map[string]interface{}) (int32, int32, time.Time) {
+	originID := subscription.OriginID
+	destinationID := subscription.DestinationID
+	datetime := subscription.DateTime
+
+	if newOriginID, exists := updates["origin_id"]; exists {
+		if val, ok := newOriginID.(float64); ok {
+			originID = int32(val)
+		}
+	}
+	if newDestinationID, exists := updates["destination_id"]; exists {
+		if val, ok := newDestinationID.(float64); ok {
+			destinationID = int32(val)
+		}
+	}
+	if newDateTime, exists := updates["date_time"]; exists {
+		if datetimeStr, ok := newDateTime.(string); ok {
+			if parsedTime, err := time.Parse(time.RFC3339, datetimeStr); err == nil {
+				datetime = parsedTime
+			}
+		}
+	}
+
+	return originID, destinationID, datetime
+}
+
+// checkActiveSubscriptionConflict checks if there's an existing active subscription with the same parameters
+func checkActiveSubscriptionConflict(userID string, originID int32, destinationID int32, datetime time.Time, excludeID uuid.UUID) error {
+	var existing Subscription
+	result := db.Where("user_id = ? AND origin_id = ? AND destination_id = ? AND date_time = ? AND is_active = ? AND id != ?",
+		userID, originID, destinationID, datetime, true, excludeID).First(&existing)
+
+	if result.Error == nil {
+		return fmt.Errorf("active subscription already exists for this route and datetime")
+	}
+	return nil
+}
+
+// shouldCheckConflict determines if we need to check for conflicts based on the updates
+func shouldCheckConflict(updates map[string]interface{}) bool {
+	isActive, exists := updates["is_active"]
+	return exists && isActive == true
+}
+
 func updateSubscription(c *gin.Context) {
 	id := c.Param("id")
 
@@ -303,40 +374,12 @@ func updateSubscription(c *gin.Context) {
 		return
 	}
 
-	// If updating to active status or changing route/datetime, check for conflicts
-	if isActive, exists := updates["is_active"]; exists && isActive == true {
-		// Get the values that will be used after update
-		userID := subscription.UserID
-		originID := subscription.OriginID
-		destinationID := subscription.DestinationID
-		datetime := subscription.DateTime
+	// Check for conflicts if updating to active status
+	if shouldCheckConflict(updates) {
+		originID, destinationID, datetime := extractUpdatedValues(&subscription, updates)
 
-		if newOriginID, exists := updates["origin_id"]; exists {
-			if val, ok := newOriginID.(float64); ok {
-				originID = int32(val)
-			}
-		}
-		if newDestinationID, exists := updates["destination_id"]; exists {
-			if val, ok := newDestinationID.(float64); ok {
-				destinationID = int32(val)
-			}
-		}
-		if newDateTime, exists := updates["date_time"]; exists {
-			// Parse the datetime string to time.Time
-			if datetimeStr, ok := newDateTime.(string); ok {
-				if parsedTime, err := time.Parse(time.RFC3339, datetimeStr); err == nil {
-					datetime = parsedTime
-				}
-			}
-		}
-
-		// Check for existing active subscription (excluding current one)
-		var existing Subscription
-		result := db.Where("user_id = ? AND origin_id = ? AND destination_id = ? AND date_time = ? AND is_active = ? AND id != ?",
-			userID, originID, destinationID, datetime, true, subscription.ID).First(&existing)
-
-		if result.Error == nil {
-			c.JSON(409, gin.H{"error": "Active subscription already exists for this route and datetime"})
+		if err := checkActiveSubscriptionConflict(subscription.UserID, originID, destinationID, datetime, subscription.ID); err != nil {
+			c.JSON(409, gin.H{"error": err.Error()})
 			return
 		}
 	}
