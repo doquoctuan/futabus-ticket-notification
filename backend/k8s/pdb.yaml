@@ -1,0 +1,12 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: futabus-backend-pdb
+  namespace: futabus
+  labels:
+    app: futabus-backend
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: futabus-backend
