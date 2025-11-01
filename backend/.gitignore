@@ -11,6 +11,9 @@
 # Output of the go build command, etc
 *.out
 
+# Build artifacts
+futabus-notification
+
 # Go workspace file
 go.work
 

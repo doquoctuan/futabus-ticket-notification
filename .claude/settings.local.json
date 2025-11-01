@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "SlashCommand(/init)",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"E:\\Workspace\\Labs\\futabus-ticket-notification\\proto\\generate-go.ps1\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
